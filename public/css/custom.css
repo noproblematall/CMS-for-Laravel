@@ -1,0 +1,21 @@
+.display-none {
+    display: none;
+}
+
+.display-show {
+    display: block;
+}
+
+.border-red{
+    border:1px solid red;
+}
+
+.require-field{
+    color: red;
+    font-weight: bolder;
+}
+
+.avatar-icon-xl .avatar-icon {
+    width: 100px;
+    height: 100px;
+}
