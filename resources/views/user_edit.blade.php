@@ -73,7 +73,7 @@
 
                             <div class="form-group">
                                 <label for="role">Role <span class="require-field">*</span></label>
-                                <select class="form-control" id="role" required>
+                                <select class="form-control" name="role" id="role" required>
                                     <option value="">Please select...</option>
                                     @if ($user->role_id == 2)
                                         <option value="2" selected>Admin</option>
@@ -90,7 +90,7 @@
         
                             <div class="form-group" id="admin-wrapper">
                                 <label for="admin">Admin <span class="require-field">*</span></label>
-                                <select class="form-control" id="admin">
+                                <select class="form-control" name="admin" id="admin">
                                     <option value="">Please select...</option>
                                     @isset($admins)
                                         @foreach ($admins as $admin)
