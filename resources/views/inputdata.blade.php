@@ -93,45 +93,37 @@
                     </div>
                 </div>
                 <div class="main-card mb-3 card">
-                    <div class="card-body"><h5 class="card-title">1.1.1	Batas Wilayah</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">1.3.2.3 Ketersediaan Hijauan Pakan Ternak</h5>
                         <table class="mb-0 table table-bordered">
                             <tbody>
-                            <tr>
-                                <th style="text-align: center; vertical-align: middle;">Batas</th>
-                                <th style="text-align: center; vertical-align: middle;">Kelurahan</th>
-                                <th style="text-align: center; vertical-align: middle;">Kecamatan</th>
-                            </tr>
-                            <tr>
-                                <td>1. Sebelah utara</td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                            </tr>
-                            <tr>
-                                <td>2. Sebelah selatan</td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                            </tr>
-                            <tr>
-                                <td>3. Sebelah timur</td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                            </tr>
-                            <tr>
-                                <td>4. Sebelah barat</td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                                <td><input type="text" name="usrname" class="mb- form-control-sm form-control"></td>
-                            </tr>                
+                                <tr>
+                                    <td>Luas tanaman pakan ternak (rumput gajah, dll)</td>
+                                    <td><input type="text" name="luas_tanaman_pakan_ternak_rumput_gajah_dll" id="luas_tanaman_pakan_ternak_rumput_gajah_dll" class="form-control-sm form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Produksi hijauan makanan ternak</td>
+                                    <td><input type="text" name="produksi_hijauan_makanan_ternak" id="produksi_hijauan_makanan_ternak" class="form-control-sm form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Dipasok dari luar Kelurahan</td>
+                                    <td><input type="text" name="dipasok_dari_luar_kelurahan" id="dipasok_dari_luar_kelurahan" class="form-control-sm form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Disubsidi dinas</td>
+                                    <td><input type="text" name="disubsidi_dinas" id="disubsidi_dinas" class="form-control-sm form-control"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>    
+                </div>
             </div>
             <div class="col-md-12">
                 <div class="main-card mb-3 card">
                     <div class="card-body"><h5 class="card-title"></h5>
                         <div class="text-center">
                             <button class="btn-wide mb-2 mr-2 btn-icon-vertical btn btn-primary btn-lg"><i class=""> </i>Simpan</button>
-                            <button class="btn-wide mb-2 mr-2 btn-icon-vertical btn btn-primary btn-lg"><i class=""> </i>Batal</button>
+                            {{-- <button class="btn-wide mb-2 mr-2 btn-icon-vertical btn btn-primary btn-lg"><i class=""> </i>Batal</button> --}}
                         </div>
                     </div>
                 </div>
