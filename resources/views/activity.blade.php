@@ -26,7 +26,7 @@
                                             <span class="vertical-timeline-element-icon bounce-in"><i class="badge badge-dot badge-dot-xl {{str_slug(strtolower($item->history_type))}}"> </i></span>
                                             <div class="vertical-timeline-element-content bounce-in">
                                                 <h4 class="timeline-title">{{$item->history_type}}</h4>
-                                                <p>{{$item->history_name}}</p>
+                                                <p>{{$item->history_name}}  <span style="color:blue;">{{$item->created_at}}</span></p>
                                                 <span class="vertical-timeline-element-date">{{date("h:i:a", strtotime($item->created_at))}}</span>
                                             </div>
                                         </div>
