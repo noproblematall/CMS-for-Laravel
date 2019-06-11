@@ -94,16 +94,27 @@ $(document).ready(function(){
         })
     })
 
-    // $('#modalbutton').click(function(){
-    //     $.ajax({
-    //         url:'getadmin',
-    //         data:{a:a},
-    //         type:'get',
-    //         success:function(data){
-    //             console.log(data);
-    //         }
-    //     })
-    // })
+    $('.userd_elete').click(function(e){
+        e.preventDefault();
+        console.log('ok');
+        swal({
+            title: "Warning",
+            text: "Are you sure ?",
+            icon: "warning",
+            buttons: {
+                cancel: "Cancel",                
+                default: 'Ok',
+              },
+          }).then((value)=>{
+              switch(value) {
+                    case "default" :
+                        location.href = ($(this).attr('href'));
+                        break;
+                    case "cancel" :
+                        break;
+              }
+          });
+    })
 
     function validation(user_id,user_email,role,admin,password,confirm_password){
         if(user_id == ''){

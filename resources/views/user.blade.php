@@ -65,7 +65,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             &nbsp;&nbsp;&nbsp;
-                                            <a href="{{ route('userdelete', ['id' => $user->id]) }}" class="text-danger" title="Delete" onclick="return window.confirm('Are you sure?')">
+                                            <a href="{{ route('userdelete', ['id' => $user->id]) }}" class="text-danger userd_elete" title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>

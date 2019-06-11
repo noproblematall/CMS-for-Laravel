@@ -116,6 +116,11 @@
                                             </div>
                                             <ul class="nav flex-column">
                                                 <li class="nav-item-divider mb-0 nav-item"></li>
+                                                <div class="mt-2 text-center">
+                                                    <a class="btn-pill btn-shadow btn-shine btn btn-focus" href="{{ route('setting') }}">
+                                                        {{ __('User Setting') }}
+                                                    </a>
+                                                </div>
                                             </ul>
                                         </div>
                                     </div>
