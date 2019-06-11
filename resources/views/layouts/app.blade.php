@@ -80,7 +80,7 @@
                                 <div class="widget-content-left">
                                     <div class="btn-group">
                                         <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="p-0 btn">
-                                            <img width="42" class="rounded-circle" src="{{asset('images/avatars/1.png')}}" alt="Avatar">
+                                            <img width="42" class="rounded-circle" src="{{asset(Auth::user()->photo)}}" alt="Avatar">
                                             <i class="fa fa-angle-down ml-2 opacity-8"></i>
                                         </a>
                                         <div tabindex="-1" role="menu" aria-hidden="true" class="rm-pointers dropdown-menu-lg dropdown-menu dropdown-menu-right">
@@ -92,11 +92,11 @@
                                                             <div class="widget-content-wrapper">
                                                                 <div class="widget-content-left mr-3">
                                                                     <img width="42" class="rounded-circle"
-                                                                         src="{{asset('images/avatars/1.png')}}" alt="Avatar">
+                                                                         src="{{asset(Auth::user()->photo)}}" alt="Avatar">
                                                                 </div>
                                                                 <div class="widget-content-left">
-                                                                    <div class="widget-heading">Alina Mcloughlin</div>
-                                                                    <div class="widget-subheading opacity-8">A short profile description</div>
+                                                                    <div class="widget-heading">{{Auth::user()->username}}</div>
+                                                                    <div class="widget-subheading opacity-8">Welcome to CMS</div>
                                                                 </div>
                                                                 <div class="widget-content-right mr-2">
                                                                     <a class="btn-pill btn-shadow btn-shine btn btn-focus" href="{{ route('logout') }}"onclick="event.preventDefault();document.getElementById('logout-form').submit();">
@@ -127,10 +127,10 @@
                                 </div>
                                 <div class="widget-content-left  ml-3 header-user-info">
                                     <div class="widget-heading">
-                                        Alina Mclourd
+                                        {{Auth::user()->username}}
                                     </div>
                                     <div class="widget-subheading">
-                                        VP People Manager
+                                        {{Auth::user()->role->name}}
                                     </div>
                                 </div>
                             </div>

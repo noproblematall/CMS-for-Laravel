@@ -21,7 +21,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/setting', 'HomeController@setting')->name('setting');
 Route::get('/search', 'HomeController@search')->name('search');
 Route::get('/user', 'HomeController@user')->name('user');
-
+Route::post('/setting','HomeController@user_setting')->name('user_setting');
 Route::post('adduser', 'HomeController@adduser')->name('adduser');
 Route::get('/useredit/{id}', 'HomeController@useredit')->name('useredit');
 Route::post('/user_edit', 'HomeController@user_edit')->name('user_edit');

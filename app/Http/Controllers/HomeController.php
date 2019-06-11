@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -32,11 +33,63 @@ class HomeController extends Controller
 
     public function setting()
     {
-        
-        return view('setting');
+        $admins = Role::where('name', 'Admin')->first()->users;
+        return view('setting', compact('admins'));
     }
 
-    
+    public function user_setting(Request $request)
+    {
+        $id = Auth::user()->id;
+        $cur_photo = Auth::user()->photo;
+        $username = $request->get('username');
+        $set_email = $request->get('email');
+        $cur_password = $request->get('cur_password');
+        $new_password = $request->get('password');
+        
+        if($cur_password){
+            if(!Hash::check($cur_password, Auth::user()->password)){
+                $errors = ['cur_password' => 'The password is incorrect.'];
+                return back()->withErrors($errors);
+            }else{
+                if($request->hasfile('photo')){
+                    $fileName = time() . '.' . request()->photo->getClientOriginalExtension();
+                    request()->photo->move(public_path('images/avatars'),$fileName);
+                    // $request->photo->storeAs('public/profile',$fileName);
+                    $photo = 'images/avatars/' . $fileName;
+                }else{
+                    $photo = $cur_photo;
+                }
+                DB::table('users')
+                ->where('id', $id)
+                ->update([
+                    'username' => $username,
+                    'email' => $set_email,
+                    'password' => Hash::make($new_password),
+                    'photo' => $photo,
+                ]);
+                return back();
+            }
+        }else{
+            if($request->hasfile('photo')){
+                $fileName = time() . '.' . request()->photo->getClientOriginalExtension();
+                request()->photo->move(public_path('images/avatars'),$fileName);
+                // $request->photo->storeAs('public/profile',$fileName);
+                $photo = 'images/avatars/' . $fileName;
+            }else{
+                $photo = $cur_photo;
+            }
+            DB::table('users')
+            ->where('id', $id)
+            ->update([
+                'username' => $username,
+                'email' => $set_email,
+                'photo' => $photo,
+            ]);
+            return back();
+        }
+        
+        
+    }
 
     public function search()
     {
@@ -61,6 +114,7 @@ class HomeController extends Controller
         if($exist !== null){
             return 0;
         }else{
+            $photo = 'images/avatars/1.png';
             $username = $request->get('username');
             $role = $request->get('role');
             $password = $request->get('password');
@@ -73,6 +127,7 @@ class HomeController extends Controller
                     'email' => $email,
                     'role_id' => $role,
                     'parent_id' => $admin,
+                    'photo' => $photo,
                     'password' => Hash::make($password)
                 ]);
                 return 1;
@@ -82,6 +137,7 @@ class HomeController extends Controller
                     'username' => $username,
                     'email' => $email,
                     'role_id' => $role,
+                    'photo' => $photo,
                     'password' => Hash::make($password)
                 ]);
                 return 1;

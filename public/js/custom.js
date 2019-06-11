@@ -116,6 +116,22 @@ $(document).ready(function(){
           });
     })
 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          
+          reader.onload = function(e) {
+            $('#my_avatar').attr('src', e.target.result);
+          }
+          
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+      
+      $("#photo").change(function() {
+        readURL(this);
+      });
+
     function validation(user_id,user_email,role,admin,password,confirm_password){
         if(user_id == ''){
             $('#userid').addClass('border-red');
@@ -193,5 +209,52 @@ $(document).ready(function(){
                         break;
               }
           });
+    })
+
+    $('#setuser').click(function(){
+        $('.error').removeClass('display-show');
+        $('.form-control').removeClass('border-red');
+        let email = $('#set_email').val();
+        let cur_password = $('#cur_password').val();
+        let set_password = $('#set_password').val();
+        let set_confirm_password = $('#set_confirm_password').val();
+        if(email){
+            if(!validateEmail(email)){
+                $('#set_email').addClass('border-red');
+                $('#set_email-type-error').addClass('display-show');
+                return false;
+            }
+        }
+        if(set_password){
+            if(!cur_password){
+                $('#cur_password').addClass('border-red');
+                $('#cur_password-require-error').addClass('display-show');
+                return false;
+            }
+            if(set_password.length < 8){
+                $('#set_password').addClass('border-red');
+                $('#set_password-length-error').addClass('display-show');
+                return false;
+            }
+            if(!set_confirm_password){
+                $('#set_confirm_password').addClass('border-red');
+                $('#set_confirm_password-require-error').addClass('display-show');
+                return false;
+            }
+            if(set_confirm_password != set_password){
+                $('#set_confirm_password').addClass('border-red');
+                $('#set_password-same-error').addClass('display-show');
+                return false;
+            }
+        }
+        if(cur_password || set_confirm_password){
+            if(!set_password){
+                $('#set_password').addClass('border-red');
+                $('#set_password-require-error').addClass('display-show');
+                return false;
+            }
+            
+        }
+        $('#setform').submit();
     })
   })
