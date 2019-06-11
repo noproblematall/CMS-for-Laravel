@@ -53,7 +53,6 @@ class DataEdit extends Controller
                 if(!$this->containsOnlyNull($database_data)){
                     $isisan->update($data);
                     $event = EditEvent::where('id',4)->first();
-                    dd($event);
                     $event_name = $event->event_name;
                     $event_type = $event->event_type;
                     $event_name = str_replace('uuu',$user_name,$event_name);
