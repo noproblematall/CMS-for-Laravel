@@ -30,15 +30,9 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function activity()
-    {
-        return view('activity');
-    }
+    
 
-    public function inputdata()
-    {
-        return view('inputdata');
-    }
+    
 
     public function search()
     {
@@ -133,29 +127,4 @@ class HomeController extends Controller
         DB::table('users')->where('id',$id)->delete();
         return back();
     }
-
-    public function edit_batas(Request $request){
-        $user = Auth::user();
-        $data = $request->all();
-        $field1 = Batas::where('user_id', $user->id)->where('name', 'field1')->first();
-        $field2 = Batas::where('user_id', $user->id)->where('name', 'field2')->first();
-        $field3 = Batas::where('user_id', $user->id)->where('name', 'field3')->first();
-        $field4 = Batas::where('user_id', $user->id)->where('name', 'field4')->first();
-        $field1->kelurahan = $data['kelurahan'][0];
-        $field1->kecamatan = $data['kecamatan'][0];
-        $field1->save();
-        $field2->kelurahan = $data['kelurahan'][1];
-        $field2->kecamatan = $data['kecamatan'][1];
-        $field2->save();
-        $field3->kelurahan = $data['kelurahan'][2];
-        $field3->kecamatan = $data['kecamatan'][2];
-        $field3->save();
-        $field4->kelurahan = $data['kelurahan'][3];
-        $field4->kecamatan = $data['kecamatan'][3];
-        $field4->save();
-    }
-
-
-
-
 }

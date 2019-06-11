@@ -22,6 +22,7 @@
 @endsection
 
 @section('content')
+<div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-body">
@@ -89,6 +90,7 @@
             </div>
         </div>
     </div>
+</div>
     
 @endsection
 

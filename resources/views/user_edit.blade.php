@@ -21,6 +21,7 @@
 @endsection
 
 @section('content')
+<div class="row">
     <div class="col-md-12">
         <div class="card-hover-shadow profile-responsive card-border border-success mb-3 card">
             <div class="dropdown-menu-header">
@@ -135,5 +136,5 @@
             
         </div>
     </div>
-    
+</div>
 @endsection

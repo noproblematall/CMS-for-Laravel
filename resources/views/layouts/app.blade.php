@@ -10,9 +10,21 @@
     <title>{{ config('app.name', 'CMS') }}</title>
 
     <!-- Scripts -->
-    <script src="{{asset('js/jquery.min.js')}}" defer></script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{asset('js/jquery.min.js')}}" defer></script> --}}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
     <script src="{{ asset('js/sweetalert.min.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/data.js') }}" defer></script> --}}
     {{-- <script src="{{ asset('js/main.js') }}" defer></script> --}}
     
 
@@ -197,14 +209,14 @@
                 <div class="app-main__inner">
                     <div class="app-page-title">
                         <div class="page-title-wrapper">
-                            @yield('subtitle')                            
+                            @yield('subtitle')
                         </div>
                     </div>
                     <div class="tab-content">
                         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-                            <div class="row">
+                            {{-- <div class="row"> --}}
                                 @yield('content')
-                            </div>
+                            {{-- </div> --}}
                         </div>
                     </div>
                 </div>                    
