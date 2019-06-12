@@ -22,7 +22,7 @@
 @endsection
 
 @section('content')
-
+        <input type="hidden" name="" id="select_admin" value="{{Auth::user()->id}}" disabled>
         <div class="row form_container">
             <div class="col-md-6"><!--tab kiri-->
                 <div class="main-card mb-3 card">
