@@ -19,13 +19,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/setting', 'HomeController@setting')->name('setting');
-Route::get('/search', 'HomeController@search')->name('search');
-Route::get('/user', 'HomeController@user')->name('user');
 Route::post('/setting','HomeController@user_setting')->name('user_setting');
-Route::post('adduser', 'HomeController@adduser')->name('adduser');
-Route::get('/useredit/{id}', 'HomeController@useredit')->name('useredit');
-Route::post('/user_edit', 'HomeController@user_edit')->name('user_edit');
-Route::get('/userdelete/{id}', 'HomeController@userdelete')->name('userdelete');
 
 // Data processing
 Route::get('/inputdata', 'DataEdit@index')->name('inputdata');
@@ -34,5 +28,23 @@ Route::post('mengisi', 'DataEdit@mengisi_edit')->name('mengisi_edit');
 Route::post('pakan', 'DataEdit@pakan_edit')->name('pakan_edit');
 
 // Activity
-
 Route::get('/activity', 'ActivityController@index')->name('activity');
+
+// Route For Only SuperAdmin
+Route::group([
+    'middleware' => 'super',
+    'prefix' => 'super'
+], function ($router) {
+    Route::get('/user', 'HomeController@user')->name('user');
+    Route::post('adduser', 'HomeController@adduser')->name('adduser');
+    Route::get('/useredit/{id}', 'HomeController@useredit')->name('useredit');
+    Route::post('/user_edit', 'HomeController@user_edit')->name('user_edit');
+    Route::get('/userdelete/{id}', 'HomeController@userdelete')->name('userdelete');
+
+    // Search
+    Route::get('/search', 'DataEdit@search')->name('search');
+    Route::post('/admin_search', 'DataEdit@admin_search')->name('admin_search');
+});
+
+// Route For User
+Route::get('/userinput', 'DataEdit@user_inputdata')->name('user.inputdata');

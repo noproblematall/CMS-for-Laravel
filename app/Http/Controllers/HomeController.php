@@ -28,7 +28,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $number = User::get()->count();
+        $super = User::where('role_id', 1)->count();
+        $admin = User::where('role_id', 2)->count();
+        $user = User::where('role_id', 3)->count();
+        $users = array('super'=>$super,'admin'=>$admin,'user'=>$user,'number'=>$number);
+        return view('home',compact('users'));
     }
 
     public function setting()
@@ -91,10 +96,7 @@ class HomeController extends Controller
         
     }
 
-    public function search()
-    {
-        return view('search');
-    }
+
 
     public function user()
     {
@@ -184,7 +186,14 @@ class HomeController extends Controller
 
     public function userdelete($id)
     {
-        DB::table('users')->where('id',$id)->delete();
-        return back();
+        $exist = User::find($id)->my_users->count();
+        if($exist > 0){
+            $errors = ['exist' => 'You can\'t delete this "Admin". Because, this "Admin" has some "User". First, you have to delete the "User"'];
+            return back()->withErrors($errors);
+        }else{
+            DB::table('users')->where('id',$id)->delete();
+            return back();
+        }
+        
     }
 }

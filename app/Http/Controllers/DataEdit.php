@@ -8,6 +8,7 @@ use App\Models\PakanTernak;
 use App\Models\TableIsian;
 use App\Models\EditEvent;
 use App\Models\EventHistory;
+use App\Models\Role;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +28,31 @@ class DataEdit extends Controller
         return view('inputdata',compact('isian','mengisi','pakan'));
     }
 
+    public function user_inputdata()
+    {
+        $user_id = Auth::user()->parent_id;
+        $isian = TableIsian::where('user_id',$user_id)->first();
+        $mengisi = MengisiProfil::where('user_id',$user_id)->first();
+        $pakan = PakanTernak::where('user_id',$user_id)->first();
+        return view('userinput',compact('isian','mengisi','pakan'));
+    }
+
+    public function search()
+    {
+        $admins = Role::where('name', 'Admin')->first()->users;
+        return view('search',compact('admins'));
+    }
+
+    public function admin_search(Request $request)
+    {
+        $user_id = $request->get('admin_id');
+        $admins = Role::where('name', 'Admin')->first()->users;
+        $isian = TableIsian::where('user_id',$user_id)->first();
+        $mengisi = MengisiProfil::where('user_id',$user_id)->first();
+        $pakan = PakanTernak::where('user_id',$user_id)->first();
+        return view('search',compact('isian','mengisi','pakan','admins','user_id'));
+    }
+
     public function containsOnlyNull($input)
     {
         return empty(array_filter($input, function ($a) { return $a !== null;}));
@@ -35,14 +61,22 @@ class DataEdit extends Controller
     public function isian_edit(Request $request)
     {
         $table_name = 'TABEL ISIAN';
-        $user_id = Auth::user()->id;
-        $user_name = Auth::user()->name;
-        $data = $request->all();
         $flag = false;
-        unset($data['_token']);
-        $flag = $this->containsOnlyNull($data);
-        
-        $data['user_id'] = $user_id;
+        $data = $request->all();
+        if(!$request->has('user_id')){
+            $user_id = Auth::user()->id;
+            $user_name = Auth::user()->name;
+            $data['user_id'] = $user_id;            
+            unset($data['_token']);
+            $flag = $this->containsOnlyNull($data);
+        }else{
+            $user_id = $data['user_id'];
+            $user_name = Auth::user()->name;
+            unset($data['_token']);
+            unset($data['user_id']);
+            $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;  
+        }
         $isisan = TableIsian::where('user_id',$user_id)->first();        
         if($isisan){
             $database_data = $isisan->toArray();            
@@ -105,13 +139,22 @@ class DataEdit extends Controller
     public function mengisi_edit(Request $request)
     {
         $table_name = 'SUMBER DATA UNTUK MENGISI PROFIL KELURAHAN';
-        $user_id = Auth::user()->id;
-        $user_name = Auth::user()->name;
-        $data = $request->all();
         $flag = false;
-        unset($data['_token']);
-        $flag = $this->containsOnlyNull($data);
-        $data['user_id'] = $user_id;
+        $data = $request->all();
+        if(!$request->has('user_id')){
+            $user_id = Auth::user()->id;
+            $user_name = Auth::user()->name;
+            $data['user_id'] = $user_id;            
+            unset($data['_token']);
+            $flag = $this->containsOnlyNull($data);
+        }else{
+            $user_id = $data['user_id'];
+            $user_name = Auth::user()->name;
+            unset($data['_token']);
+            unset($data['user_id']);
+            $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;  
+        }
         $isisan = MengisiProfil::where('user_id',$user_id)->first();
         if($isisan){
             $database_data = $isisan->toArray();            
@@ -175,13 +218,22 @@ class DataEdit extends Controller
     public function pakan_edit(Request $request)
     {
         $table_name = 'KETERSEDIAAN HIJAUAN PAKAN TERNAK';
-        $user_id = Auth::user()->id;
-        $user_name = Auth::user()->name;
-        $data = $request->all();
         $flag = false;
-        unset($data['_token']);
-        $flag = $this->containsOnlyNull($data);
-        $data['user_id'] = $user_id;
+        $data = $request->all();
+        if(!$request->has('user_id')){
+            $user_id = Auth::user()->id;
+            $user_name = Auth::user()->name;
+            $data['user_id'] = $user_id;            
+            unset($data['_token']);
+            $flag = $this->containsOnlyNull($data);
+        }else{
+            $user_id = $data['user_id'];
+            $user_name = Auth::user()->name;
+            unset($data['_token']);
+            unset($data['user_id']);
+            $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;  
+        }
         $isisan = PakanTernak::where('user_id',$user_id)->first();
         if($isisan){
             $database_data = $isisan->toArray();            

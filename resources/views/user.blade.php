@@ -91,7 +91,12 @@
         </div>
     </div>
 </div>
-    
+@if ($errors->has('exist'))
+    <div class="alert alert-danger alert-dismissible fade show" id="my_alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{ $errors->first('exist') }}</strong>
+    </div>    
+@endif
 @endsection
 
 @section('modal')
@@ -180,7 +185,15 @@
             </div>
         </div>
     </div>
+    {{-- Alert --}}
+
 @endsection
 @section('script')
-
+<script>
+$(document).ready(function(){
+    setTimeout(function(){
+        $("#my_alert").alert("close");
+    }, 3000);
+})
+</script>
 @endsection

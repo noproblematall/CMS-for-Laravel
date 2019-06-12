@@ -188,24 +188,38 @@
                                     ACTIVITY ADMIN/USER
                                 </a>                                    
                             </li>
-                            <li>
-                                <a href="{{route('inputdata')}}">
-                                    <i class="metismenu-icon pe-7s-edit"></i>
-                                    FORM INPUT DATA
-                                </a>                                    
-                            </li>
-                            <li>
-                                <a href="{{route('search')}}">
-                                    <i class="metismenu-icon pe-7s-server"></i>
-                                    SEARCH DATABASE
-                                </a>                                    
-                            </li>
-                            <li>
-                                <a href="{{route('user')}}">
-                                    <i class="metismenu-icon pe-7s-users"></i>
-                                    USER MANAGEMENT
-                                </a>                                    
-                            </li>
+                            @if (Auth::user()->role_id == 3)
+                                <li>
+                                    <a href="{{route('user.inputdata')}}">
+                                        <i class="metismenu-icon pe-7s-edit"></i>
+                                        FORM INPUT DATA
+                                    </a>                                    
+                                </li>
+                            @else
+                                <li>
+                                    <a href="{{route('inputdata')}}">
+                                        <i class="metismenu-icon pe-7s-edit"></i>
+                                        FORM INPUT DATA
+                                    </a>                                    
+                                </li> 
+                            @endif
+                            
+                            @if (Auth::user()->role_id == 1)
+                                <li>
+                                    <a href="{{route('search')}}">
+                                        <i class="metismenu-icon pe-7s-server"></i>
+                                        SEARCH DATABASE
+                                    </a>                                    
+                                </li>
+
+                                <li>
+                                    <a href="{{route('user')}}">
+                                        <i class="metismenu-icon pe-7s-users"></i>
+                                        USER MANAGEMENT
+                                    </a>                                    
+                                </li>
+                            @endif
+                            
                         </ul>
                     </div>
                 </div>
