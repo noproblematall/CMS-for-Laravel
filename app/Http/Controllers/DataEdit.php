@@ -62,13 +62,13 @@ class DataEdit extends Controller
     {
         $table_name = 'TABEL ISIAN';
         $flag = false;
-        $data = $request->all();
+        $data = $request->all();        
         if(!$request->has('user_id')){
             $user_id = Auth::user()->id;
             $user_name = Auth::user()->name;
-            $data['user_id'] = $user_id;            
             unset($data['_token']);
             $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;           
         }else{
             $user_id = $data['user_id'];
             $user_name = Auth::user()->name;
@@ -144,9 +144,9 @@ class DataEdit extends Controller
         if(!$request->has('user_id')){
             $user_id = Auth::user()->id;
             $user_name = Auth::user()->name;
-            $data['user_id'] = $user_id;            
             unset($data['_token']);
             $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;
         }else{
             $user_id = $data['user_id'];
             $user_name = Auth::user()->name;
@@ -223,9 +223,9 @@ class DataEdit extends Controller
         if(!$request->has('user_id')){
             $user_id = Auth::user()->id;
             $user_name = Auth::user()->name;
-            $data['user_id'] = $user_id;            
             unset($data['_token']);
             $flag = $this->containsOnlyNull($data);
+            $data['user_id'] = $user_id;    
         }else{
             $user_id = $data['user_id'];
             $user_name = Auth::user()->name;
