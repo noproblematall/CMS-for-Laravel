@@ -193,7 +193,7 @@
 $(document).ready(function(){
     setTimeout(function(){
         $("#my_alert").alert("close");
-    }, 3000);
+    }, 5000);
 })
 </script>
 @endsection
