@@ -1,51 +1,94 @@
-$(document).ready(function (){
-    $('.toast_container').html('');
+$(document).ready(function(){
+    var table = $('#product_table').DataTable();
     $('.loader_container').addClass('display-none');
-    $('#data_submit').click(function(){
-        // console.log($('#select_admin').val())
-        if($('#select_admin').val()){ 
-            var time = 500;
-            $('.toast_container').html('');
-            $('.my_toast .toast').attr('data-delay',1000);
-            var form_elements = $('.form_container form');
-            for(var i=0;i<form_elements.length;i++){
-                if($(form_elements[i]).attr('id') != 'search_form'){
-                    console.log($(form_elements[i]).attr('action'));
-                    var post_data = $(form_elements[i]).serialize();
-                    var current_url =  $(form_elements[i]).attr('action');
-                    $.ajax({
-                        url:current_url,
-                        data:post_data,
-                        type:'post',
-                        beforeSend:function (){$('.loader_container').removeClass('display-none');},
-                        success:function(data){
-                            if(data !== ''){
-                                console.log(data);
-                                $('.my_toast .toast-body').text(data);
-                                var current = $('.my_toast .toast').attr('data-delay');
-                                current = Number(current) + time;
-                                $('.my_toast .toast').attr('data-delay',current);
-                                // let clone = $('.my_toast .toast').clone();
-                                $('.toast_container').append($('.my_toast .toast').clone());
-                                $('.toast_container .toast').toast('show');
-                            }
-                        },
-                        
-                    }).done(function (){
-                        $('.loader_container').addClass('display-none');
-                    })
-                }
+    $('.product_delete').click(function(e){
+        e.preventDefault();
+        console.log('ok')
+        swal({
+            title: "Warning",
+            text: "Are you sure ?",
+            icon: "warning",
+            buttons: {
+                cancel: "Cancel",                
+                default: 'Ok',
+            },
+        }).then((value)=>{
+            switch(value) {
+                    case "default" :
+                        location.href = ($(this).attr('href'));
+                        break;
+                    case "cancel" :
+                        break;
             }
-        }
+        });
     })
 
-    $('#select_admin').change(function(){
-        if($(this).val()){
-            $('#admin_id').val($(this).val());
-            $('#search_form').submit();
-        }else{
-            
+    $('#core_search').click(function(){
+        let info = $('#search_col').val();
+        let keyword = $('#search_keyword').val();
+        if(info == 4){
+            switch (keyword) {
+                case 'yes':
+                    keyword = 'on';
+                    break;
+                case 'no':
+                    keyword = 'off';
+            }
         }
+        let data = {info:info,keyword:keyword};
+        $.ajax({
+            url:'core_search',
+            data:data,
+            type:'get',
+            beforeSend:function (){$('.loader_container').removeClass('display-none');},
+            success:function(data){
+                console.log(data)
+                $('#product_table tbody').empty();
+                var html = ``;
+                var sold = '';
+                if(data.length > 0){
+                    let i = 0;
+                    data.forEach(ele => {
+                        switch (ele.sold) {
+                            case 'on':
+                                sold = 'Yes';
+                                break;
+                            case 'off':
+                                sold = 'No'
+                        }
+                        i++;
+                        html += `<tr>
+                                    <td>${i}</td>
+                                    <td>${ele.product_id}</td>
+                                    <td>${ele.product_name}</td>
+                                    <td>${ele.category.name}</td>
+                                    <td>${ele.vendor}</td>
+                                    <td>${ele.description}</td>
+                                    <td>${ele.price}</td>
+                                    <td>${sold}</td>
+                                    <td>${ele.created_at}</td>
+                                </tr>`;
+                    });
+                    $('#product_table tbody').append(html)
+                }else{
+
+                }
+                
+            }
+        }).done(function (){
+            $('.loader_container').addClass('display-none');
+        })
     })
-   
+
+
+    $('#select_admin').change(function(){
+        $('#admin_id').val($(this).val());
+        $('#search_form').submit();
+    })
+
+    $('#select_category').change(function(){
+        $('#category_id').val($(this).val());
+        $('#category_search_form').submit();
+    })
 })
+

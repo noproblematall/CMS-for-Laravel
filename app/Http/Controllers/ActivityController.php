@@ -15,7 +15,7 @@ class ActivityController extends Controller
     
     public function index()
     {
-        $history = EventHistory::select()->orderby('created_at','desc')->take(20)->get();
+        $history = EventHistory::select()->orderby('created_at','desc')->paginate(8);
         return view('activity',compact('history'));
     }
 }

@@ -47,15 +47,15 @@
     color: #212529;
     background-color: #f7b924;
 }
-.table-create {
+.product-add {
     color: #fff;
     background-color: #3ac47d;
 }
-.table-edit {
+.product-edit {
     color: #fff;
     background-color: #3f6ad8;
 }
-.table-erase {
+.product-remove {
     color: #fff;
     background-color: #d92550;
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMengisiProfilsTable extends Migration
+class CreateCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class CreateMengisiProfilsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mengisi_profils', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id');
-            $table->string('field1')->nullable();
-            $table->string('field2')->nullable();
-            $table->string('field3')->nullable();
-            $table->string('field4')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class CreateMengisiProfilsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mengisi_profils');
+        Schema::dropIfExists('categories');
     }
 }

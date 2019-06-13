@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\MengisiProfil;
-use App\Models\PakanTernak;
-use App\Models\TableIsian;
 use App\Models\EditEvent;
 use App\Models\EventHistory;
 use App\Models\Role;
+use App\Models\Product;
+use App\Models\Category;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DataEdit extends Controller
@@ -21,278 +21,174 @@ class DataEdit extends Controller
 
     public function index()
     {
-        $user_id = Auth::user()->id;
-        $isian = TableIsian::where('user_id',$user_id)->first();
-        $mengisi = MengisiProfil::where('user_id',$user_id)->first();
-        $pakan = PakanTernak::where('user_id',$user_id)->first();
-        return view('inputdata',compact('isian','mengisi','pakan'));
+        $products = Auth::user()->products;
+        return view('inputdata',compact('products'));
     }
 
-    public function user_inputdata()
+    public function input_product()
     {
-        $user_id = Auth::user()->parent_id;
-        $isian = TableIsian::where('user_id',$user_id)->first();
-        $mengisi = MengisiProfil::where('user_id',$user_id)->first();
-        $pakan = PakanTernak::where('user_id',$user_id)->first();
-        return view('userinput',compact('isian','mengisi','pakan'));
+        $category = Category::get();
+        return view('product',compact('category'));
+    }
+
+    public function product_add(Request $request)
+    {
+        $this->validate($request, [
+            'product_id' => 'required|unique:products,product_id',
+            'product_name' => 'required',
+            'category_id' => 'required',
+            'vendor' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+        $product = $request->all();
+        $user_id = Auth::user()->id;
+        $user_name = Auth::user()->name;
+        $product_id = $request->get('product_id');
+        $category_name = Category::find($request->get('category_id'))->select('name')->first()->name;
+        $product['user_id'] = $user_id;
+        Product::create($product);
+        $event = EditEvent::where('id',2)->first();
+        $event_name = $event->event_name;
+        $event_type = $event->event_type;
+        $event_name = str_replace('uuu',$user_name,$event_name);
+        $event_name = str_replace('nnn',$product_id,$event_name);
+        $event_name = str_replace('ccc',$category_name,$event_name);
+        EventHistory::create([
+            'user_id' => $user_id,
+            'history_name' => $event_name,
+            'history_type' => $event_type
+        ]);
+        return redirect('inputdata')->with('success','Product Add Success');
+    }
+
+    public function product_edit($id)
+    {
+        $product = Product::find($id);
+        $category = Category::get();
+        return view('product_edit',compact('product','category'));
+    }
+
+    public function product_change(Request $request)
+    {
+        $this->validate($request, [
+            'product_name' => 'required',
+            'category_id' => 'required',
+            'vendor' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+        ]);
+        $product = $request->all();
+        if(!$request->has('sold')){
+            $product['sold'] = 'off';
+        }
+        $product_id = $request->get('id');
+        unset($product['id']);
+        unset($product['_token']);
+        DB::table('products')
+        ->where('id', $product_id)
+        ->update($product);
+        $user_id = Auth::user()->id;
+        $user_name = Auth::user()->name;
+        $category_name = Category::find($request->get('category_id'))->select('name')->first()->name;
+        $event = EditEvent::where('id',3)->first();
+        $event_name = $event->event_name;
+        $event_type = $event->event_type;
+        $event_name = str_replace('uuu',$user_name,$event_name);
+        $event_name = str_replace('nnn',$product_id,$event_name);
+        $event_name = str_replace('ccc',$category_name,$event_name);
+        EventHistory::create([
+            'user_id' => $user_id,
+            'history_name' => $event_name,
+            'history_type' => $event_type
+        ]);
+        return redirect('inputdata')->with('success','Product Update Success');
+    }
+
+    public function product_delete($id)
+    {
+        $category_id = Product::find($id)->category_id;
+        $product_id = Product::find($id)->product_id;
+        DB::table('products')->where('id',$id)->delete();
+        $user_id = Auth::user()->id;
+        $user_name = Auth::user()->name;
+        $category_name = Category::find($category_id)->select('name')->first()->name;
+        $event = EditEvent::where('id',4)->first();
+        $event_name = $event->event_name;
+        $event_type = $event->event_type;
+        $event_name = str_replace('uuu',$user_name,$event_name);
+        $event_name = str_replace('nnn',$product_id,$event_name);
+        $event_name = str_replace('ccc',$category_name,$event_name);
+        EventHistory::create([
+            'user_id' => $user_id,
+            'history_name' => $event_name,
+            'history_type' => $event_type
+        ]);
+        return back();
     }
 
     public function search()
     {
         $admins = Role::where('name', 'Admin')->first()->users;
-        return view('search',compact('admins'));
+        $category = Category::get();
+        $products = Product::get();
+        return view('search',compact('products','category','admins'));
     }
 
     public function admin_search(Request $request)
     {
         $user_id = $request->get('admin_id');
+        $category = Category::get();
         $admins = Role::where('name', 'Admin')->first()->users;
-        $isian = TableIsian::where('user_id',$user_id)->first();
-        $mengisi = MengisiProfil::where('user_id',$user_id)->first();
-        $pakan = PakanTernak::where('user_id',$user_id)->first();
-        return view('search',compact('isian','mengisi','pakan','admins','user_id'));
-    }
-
-    public function containsOnlyNull($input)
-    {
-        return empty(array_filter($input, function ($a) { return $a !== null;}));
-    }
-
-    public function isian_edit(Request $request)
-    {
-        $table_name = 'TABEL ISIAN';
-        $flag = false;
-        $data = $request->all();        
-        if(!$request->has('user_id')){
-            $user_id = Auth::user()->id;
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;           
+        if($user_id){
+            $products = User::find($user_id)->products;
+            return view('search',compact('products','admins','category','user_id'));
         }else{
-            $user_id = $data['user_id'];
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            unset($data['user_id']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;  
-        }
-        $isisan = TableIsian::where('user_id',$user_id)->first();        
-        if($isisan){
-            $database_data = $isisan->toArray();            
-        }
-        if($flag){
-            if($isisan){
-                unset($database_data['id'],$database_data['user_id'],$database_data['created_at'],$database_data['updated_at']);
-                if(!$this->containsOnlyNull($database_data)){
-                    $isisan->update($data);
-                    $event = EditEvent::where('id',4)->first();
-                    $event_name = $event->event_name;
-                    $event_type = $event->event_type;
-                    $event_name = str_replace('uuu',$user_name,$event_name);
-                    $event_name = str_replace('ttt',$table_name,$event_name);
-                    EventHistory::create([
-                        'user_id' => $user_id,
-                        'history_name' => $event_name,
-                        'history_type' => $event_type
-                    ]);
-                    return $event_name;
-                }
-            }
-        }else{
-            if($isisan){
-                unset($database_data['id'],$database_data['created_at'],$database_data['updated_at']);
-                $diff = count(array_diff_assoc($data,$database_data));                
-                    if($diff > 0){
-                        $isisan->update($data);
-                        $event = EditEvent::where('id',3)->first();
-                        $event_name = $event->event_name;
-                        $event_type = $event->event_type;
-                        $event_name = str_replace('uuu',$user_name,$event_name);
-                        $event_name = str_replace('ttt',$table_name,$event_name);
-                        EventHistory::create([
-                            'user_id' => $user_id,
-                            'history_name' => $event_name,
-                            'history_type' => $event_type
-                        ]);
-                        return $event_name;
-                    }
-                
-            }else{
-                TableIsian::create($data);
-                $event = EditEvent::where('id',2)->first();
-                $event_name = $event->event_name;
-                $event_type = $event->event_type;
-                $event_name = str_replace('uuu',$user_name,$event_name);
-                $event_name = str_replace('ttt',$table_name,$event_name);
-                EventHistory::create([
-                    'user_id' => $user_id,
-                    'history_name' => $event_name,
-                    'history_type' => $event_type
-                ]);
-                return $event_name;
-            }
-        }        
-        
-    }
-
-    public function mengisi_edit(Request $request)
-    {
-        $table_name = 'SUMBER DATA UNTUK MENGISI PROFIL KELURAHAN';
-        $flag = false;
-        $data = $request->all();
-        if(!$request->has('user_id')){
-            $user_id = Auth::user()->id;
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;
-        }else{
-            $user_id = $data['user_id'];
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            unset($data['user_id']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;  
-        }
-        $isisan = MengisiProfil::where('user_id',$user_id)->first();
-        if($isisan){
-            $database_data = $isisan->toArray();            
-        }
-
-        if($flag){
-            if($isisan){
-                unset($database_data['id'],$database_data['user_id'],$database_data['created_at'],$database_data['updated_at']);
-                if(!$this->containsOnlyNull($database_data)){
-                    $isisan->update($data);
-                    $event = EditEvent::where('id',4)->first();
-                    $event_name = $event->event_name;
-                    $event_type = $event->event_type;
-                    $event_name = EditEvent::where('id',4)->first()->event_name;
-                    $event_name = str_replace('uuu',$user_name,$event_name);
-                    $event_name = str_replace('ttt',$table_name,$event_name);
-                    EventHistory::create([
-                        'user_id' => $user_id,
-                        'history_name' => $event_name,
-                        'history_type' => $event_type
-                    ]);
-                    return $event_name;
-                }
-            }
-        }else{
-            if($isisan){
-                unset($database_data['id'],$database_data['created_at'],$database_data['updated_at']);
-                $diff = count(array_diff_assoc($data,$database_data)); 
-                    if($diff > 0){
-                        $isisan->update($data);
-                        $event = EditEvent::where('id',3)->first();
-                        $event_name = $event->event_name;
-                        $event_type = $event->event_type;
-                        $event_name = str_replace('uuu',$user_name,$event_name);
-                        $event_name = str_replace('ttt',$table_name,$event_name);
-                        EventHistory::create([
-                            'user_id' => $user_id,
-                            'history_name' => $event_name,
-                            'history_type' => $event_type
-                        ]);
-                        return $event_name;
-                    }
-
-            }else{
-                MengisiProfil::create($data);
-                $event = EditEvent::where('id',2)->first();
-                $event_name = $event->event_name;
-                $event_type = $event->event_type;
-                $event_name = str_replace('uuu',$user_name,$event_name);
-                $event_name = str_replace('ttt',$table_name,$event_name);
-                EventHistory::create([
-                    'user_id' => $user_id,
-                    'history_name' => $event_name,
-                    'history_type' => $event_type
-                ]);
-                return $event_name;
-            }
-        }        
-    }
-
-    public function pakan_edit(Request $request)
-    {
-        $table_name = 'KETERSEDIAAN HIJAUAN PAKAN TERNAK';
-        $flag = false;
-        $data = $request->all();
-        if(!$request->has('user_id')){
-            $user_id = Auth::user()->id;
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;    
-        }else{
-            $user_id = $data['user_id'];
-            $user_name = Auth::user()->name;
-            unset($data['_token']);
-            unset($data['user_id']);
-            $flag = $this->containsOnlyNull($data);
-            $data['user_id'] = $user_id;  
-        }
-        $isisan = PakanTernak::where('user_id',$user_id)->first();
-        if($isisan){
-            $database_data = $isisan->toArray();            
+            $products = Product::get();
+            return view('search',compact('products','admins','category'));
         }
         
-        if($flag){
-            if($isisan){
-                unset($database_data['id'],$database_data['user_id'],$database_data['created_at'],$database_data['updated_at']);
-                if(!$this->containsOnlyNull($database_data)){
-                    
-                    $isisan->update($data);
-                    $event = EditEvent::where('id',4)->first();
-                    $event_name = $event->event_name;
-                    $event_type = $event->event_type;
-                    $event_name = str_replace('uuu',$user_name,$event_name);
-                    $event_name = str_replace('ttt',$table_name,$event_name);
-                    EventHistory::create([
-                        'user_id' => $user_id,
-                        'history_name' => $event_name,
-                        'history_type' => $event_type
-                    ]);
-                    return $event_name;
-                }
-            }
-        }else{
-            if($isisan){
-                unset($database_data['id'],$database_data['created_at'],$database_data['updated_at']);
-                $diff = count(array_diff_assoc($data,$database_data));
- 
-                    if($diff > 0){
-                        $isisan->update($data);
-                        $event = EditEvent::where('id',3)->first();
-                        $event_name = $event->event_name;
-                        $event_type = $event->event_type;
-                        $event_name = str_replace('uuu',$user_name,$event_name);
-                        $event_name = str_replace('ttt',$table_name,$event_name);
-                        EventHistory::create([
-                            'user_id' => $user_id,
-                            'history_name' => $event_name,
-                            'history_type' => $event_type
-                        ]);
-                        return $event_name;
-                    }
+    }
 
-            }else{
-                PakanTernak::create($data);
-                $event = EditEvent::where('id',2)->first();
-                $event_name = $event->event_name;
-                $event_type = $event->event_type;
-                $event_name = str_replace('uuu',$user_name,$event_name);
-                $event_name = str_replace('ttt',$table_name,$event_name);
-                EventHistory::create([
-                    'user_id' => $user_id,
-                    'history_name' => $event_name,
-                    'history_type' => $event_type
-                ]);
-                return $event_name;
-            }
-        }        
-        
+    public function category_search(Request $request)
+    {
+        $category_id = $request->get('category_id');
+        $admins = Role::where('name', 'Admin')->first()->users;
+        $category = Category::get();
+        if($category_id){
+            $products = Category::find($category_id)->products;
+            return view('search',compact('products','admins','category','category_id'));
+        }else{
+            $products = Product::get();
+            return view('search',compact('products','admins','category'));
+        }
+    }
+
+    public function core_search(Request $request)
+    {
+        $info = $request->get('info');
+        $keyword = $request->get('keyword');
+        switch ($info) {
+            case '1':
+                $products = Product::where('product_id','like','%'.$keyword.'%')->get()->load('category')->toArray();
+                return response()->json($products);
+                break;
+            case '2':
+                $products = Product::where('product_name','like','%'.$keyword.'%')->get()->load('category')->toArray();
+                return response()->json($products);
+                break;
+            case '3':
+                $products = Product::where('vendor','like','%'.$keyword.'%')->get()->load('category')->toArray();
+                return response()->json($products);
+                break;
+            case '4':
+                $products = Product::where('sold','like','%'.$keyword.'%')->get()->load('category')->toArray();
+                return response()->json($products);
+                break;
+            default:
+                $products = Product::get()->load('category')->toArray();
+                return response()->json($products);
+                break;
+        }
     }
 }
