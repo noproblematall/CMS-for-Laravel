@@ -191,4 +191,10 @@ class DataEdit extends Controller
                 break;
         }
     }
+
+    public function user_inputdata()
+    {
+        $products = Auth::user()->my_admin->products;
+        return view('userinput',compact('products'));
+    }
 }

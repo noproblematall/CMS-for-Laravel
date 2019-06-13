@@ -50,4 +50,4 @@ Route::group([
 });
 
 // Route For User
-// Route::get('/userinput', 'DataEdit@user_inputdata')->name('user.inputdata');
+Route::get('/userinput', 'DataEdit@user_inputdata')->name('user.inputdata');

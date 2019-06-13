@@ -14,13 +14,13 @@
     <div class="col-md-6">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <h5 class="card-title">Number Of Registed Users</h5>
+                <h5 class="card-title">Revenue</h5>
                 <div id="chart-area"></div>
             </div>
         </div>
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <h5 class="card-title">Column Chart</h5>
+                <h5 class="card-title">Spline Chart</h5>
                 <div id="chart-spline"></div>
             </div>
         </div>
@@ -28,7 +28,7 @@
     <div class="col-md-6">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <h5 class="card-title">Doughnut</h5>
+                <h5 class="card-title">Column Chart</h5>
                 <div id="chart-column"></div>
             </div>
         </div>
@@ -41,12 +41,19 @@
     </div>
 </div>
 @endsection
-
+@php
+    //  dd($sold_mount);
+@endphp
 @section('script')
 
 <script src="{{asset('js/appexchart.js')}}"></script>
 <script src="{{asset('js/apex-series.js')}}"></script>
 <script>
+    var sold_mount = <?php echo json_encode($sold_mount); ?>;
+    var key_array = <?php echo json_encode($key_array); ?>;
+    var car_cat = <?php echo json_encode($car_cat);?>;
+    var bus_cat = <?php echo json_encode($bus_cat);?>;
+    var ship_cat = <?php echo json_encode($ship_cat);?>;
     var options = {
             chart: {
                 height: 350,
@@ -63,17 +70,17 @@
             },
             series: [{
                 name: "STOCK ABC",
-                data: series.monthDataSeries1.prices
+                data: sold_mount
             }],
             title: {
-                text: 'Fundamental Analysis of Stocks',
+                text: '',
                 align: 'left'
             },
             subtitle: {
-                text: 'Price Movements',
+                text: '',
                 align: 'left'
             },
-            labels: series.monthDataSeries1.dates,
+            labels: key_array,
             xaxis: {
                 type: 'datetime',
             },
@@ -113,21 +120,21 @@
                 colors: ['transparent']
             },
             series: [{
-                name: 'Net Profit',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+                name: 'Car',
+                data: car_cat
             }, {
-                name: 'Revenue',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+                name: 'Bus',
+                data: bus_cat
             }, {
-                name: 'Free Cash Flow',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+                name: 'Ship',
+                data: ship_cat
             }],
             xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                categories: key_array,
             },
             yaxis: {
                 title: {
-                    text: '$ (thousands)'
+                    text: 'Number of product per category'
                 }
             },
             fill: {
@@ -137,7 +144,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return "$ " + val + " thousands"
+                        return val
                     }
                 }
             }
@@ -163,16 +170,16 @@
                 curve: 'smooth'
             },
             series: [{
-                name: 'series1',
-                data: [31, 40, 28, 51, 42, 109, 100]
+                name: 'CAR',
+                data: car_cat
             }, {
-                name: 'series2',
-                data: [11, 32, 45, 32, 34, 52, 41]
+                name: 'BUS',
+                data: bus_cat
             }],
 
             xaxis: {
                 type: 'datetime',
-                categories: ["2018-09-19T00:00:00", "2018-09-19T01:30:00", "2018-09-19T02:30:00", "2018-09-19T03:30:00", "2018-09-19T04:30:00", "2018-09-19T05:30:00", "2018-09-19T06:30:00"],                
+                categories: key_array,                
             },
             tooltip: {
                 x: {
@@ -207,29 +214,23 @@
                 colors: ['#fff']
             },
             series: [{
-                name: 'Marine Sprite',
-                data: [44, 55, 41, 37, 22, 43, 21]
+                name: 'CAR',
+                data: car_cat
             },{
-                name: 'Striking Calf',
-                data: [53, 32, 33, 52, 13, 43, 32]
+                name: 'BUS',
+                data: bus_cat
             },{
-                name: 'Tank Picture',
-                data: [12, 17, 11, 9, 15, 11, 20]
-            },{
-                name: 'Bucket Slope',
-                data: [9, 7, 5, 8, 6, 9, 4]
-            },{
-                name: 'Reborn Kid',
-                data: [25, 12, 19, 32, 25, 24, 10]
+                name: 'SHIP',
+                data: ship_cat
             }],
             title: {
-                text: 'Fiction Books Sales'
+                text: ''
             },
             xaxis: {
-                categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014],
+                categories: key_array,
                 labels: {
                     formatter: function(val) {
-                        return val + "K"
+                        return val.toFixed(2) + "K"
                     }
                 }
             },
@@ -242,7 +243,7 @@
             tooltip: {
                 y: {
                     formatter: function(val) {
-                    return val + "K"
+                    return val.toFixed(2) + "K"
                 }
                 }
             },

@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Models\Product;
 use App\Models\Role;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 
 class HomeController extends Controller
 {
@@ -28,12 +33,35 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $number = User::get()->count();
-        $super = User::where('role_id', 1)->count();
-        $admin = User::where('role_id', 2)->count();
-        $user = User::where('role_id', 3)->count();
-        $users = array('super'=>$super,'admin'=>$admin,'user'=>$user,'number'=>$number);
-        return view('home',compact('users'));
+        $chart_end = Carbon::now();
+        $chart_start = $chart_end->copy()->subDays(5);
+        $period = CarbonPeriod::create($chart_start,$chart_end);
+        $key_array = $sold_mount = $car_cat = $bus_cat = $ship_cat = array();
+        foreach ($period as $date) {
+            $key = $date->format('Y-m-d');
+            $key_display = $date->format('M/d');
+            array_push($key_array, $key_display);
+            $daily_sold = Product::where('sold','on')->whereDate('updated_at',$key)->sum('price');
+            array_push($sold_mount,$daily_sold);
+            $daily_car = Category::find(1)->products()->whereDate('created_at',$key)->count();
+            $daily_bus = Category::find(2)->products()->whereDate('created_at',$key)->count();
+            $daily_ship = Category::find(3)->products()->whereDate('created_at',$key)->count();
+            array_push($car_cat,$daily_car);
+            array_push($bus_cat,$daily_bus);
+            array_push($ship_cat,$daily_ship);
+        }
+        return view('home',compact('key_array','sold_mount','car_cat','bus_cat','ship_cat'));
+    }
+
+    private function generateDateRange(Carbon $start_date, Carbon $end_date)
+    {
+        $dates = [];
+
+        for($date = $start_date->copy(); $date->lte($end_date); $date->addDay()) {
+            $dates[] = $date->format('Y-m-d');
+        }
+
+        return $dates;
     }
 
     public function setting()
